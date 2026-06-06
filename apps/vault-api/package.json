@@ -1,0 +1,20 @@
+{
+  "name": "@qualia/vault-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "dev": "tsx watch src/server.ts"
+  },
+  "dependencies": {
+    "@qualia/personal-data-vault-core": "file:../../packages/personal-data-vault-core",
+    "@qualia/personal-data-vault-prisma": "file:../../packages/personal-data-vault-prisma",
+    "@qualia/personal-data-vault-next": "file:../../packages/personal-data-vault-next",
+    "@qualia/personal-data-vault-google-storage": "file:../../packages/personal-data-vault-google-storage",
+    "@prisma/client": "^7.8.0",
+    "@prisma/adapter-pg": "^7.8.0",
+    "dotenv": "^17.4.2",
+    "pg": "^8.20.0"
+  }
+}

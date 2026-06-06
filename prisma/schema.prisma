@@ -1,0 +1,201 @@
+generator client {
+    provider            = "prisma-client"
+    output              = "../src/generated/prisma"
+    engineType          = "client"
+    importFileExtension = "ts"
+}
+
+datasource db {
+    provider = "postgresql"
+    schemas  = ["vault"]
+}
+
+enum PersonalDataSensitivity {
+    normal
+    sensitive
+    special_category
+
+    @@schema("vault")
+}
+
+enum PersonalDataActionType {
+    read
+    create
+    update
+    delete
+    export
+    share
+    consent_grant
+    consent_withdraw
+    erase
+    break_glass
+
+    @@schema("vault")
+}
+
+enum PersonalDataRecordStatus {
+    active
+    soft_deleted
+    erased
+
+    @@schema("vault")
+}
+
+enum PersonalDataRetentionJobStatus {
+    pending
+    running
+    completed
+    failed
+
+    @@schema("vault")
+}
+
+model PersonalDataSubject {
+    id           String   @id @default(cuid())
+    orgId        String
+    subjectType  String
+    subjectId    String
+    displayLabel String?
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    records        PersonalDataRecord[]
+    documents      PersonalDataDocument[]
+    consents       PersonalDataConsent[]
+    auditLogs      PersonalDataAuditLog[]
+    accessGrants   PersonalDataAccessGrant[]
+    retentionJobs  PersonalDataRetentionJob[]
+
+    @@unique([orgId, subjectType, subjectId])
+    @@index([orgId, subjectType])
+    @@schema("vault")
+}
+
+model PersonalDataRecord {
+    id             String                   @id @default(cuid())
+    orgId          String
+    subjectId      String
+    vaultSubject   PersonalDataSubject      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+    fieldKey       String
+    category       String
+    dataType       String
+    sensitivity    PersonalDataSensitivity
+    legalBasis     String
+    purpose        String
+    ciphertext     Bytes
+    keyVersion     Int
+    contentHash    String?
+    areaType       String?
+    areaId         String?
+    retentionAt    DateTime?
+    status         PersonalDataRecordStatus @default(active)
+    softDeletedAt  DateTime?
+    erasedAt       DateTime?
+    createdAt      DateTime                 @default(now())
+    updatedAt      DateTime                 @updatedAt
+    createdByActor String
+    updatedByActor String
+
+    @@unique([subjectId, fieldKey, areaType, areaId])
+    @@index([orgId, fieldKey])
+    @@index([orgId, retentionAt])
+    @@index([orgId, status])
+    @@schema("vault")
+}
+
+model PersonalDataDocument {
+    id                String                   @id @default(cuid())
+    orgId             String
+    subjectId         String
+    vaultSubject      PersonalDataSubject      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+    fieldKey          String
+    storageBackend    String                   @default("gcs")
+    storageObjectKey  String
+    encryptedMetadata Bytes
+    keyVersion        Int
+    byteSize          Int
+    checksumSha256    String
+    retentionAt       DateTime?
+    status            PersonalDataRecordStatus @default(active)
+    softDeletedAt     DateTime?
+    erasedAt          DateTime?
+    uploadedByActor   String
+    createdAt         DateTime                 @default(now())
+    updatedAt         DateTime                 @updatedAt
+
+    @@index([orgId, subjectId, fieldKey])
+    @@index([orgId, retentionAt])
+    @@schema("vault")
+}
+
+model PersonalDataConsent {
+    id           String              @id @default(cuid())
+    orgId        String
+    subjectId    String
+    vaultSubject PersonalDataSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+    purposeKey   String
+    legalBasis   String
+    granted      Boolean
+    grantedAt    DateTime?
+    withdrawnAt  DateTime?
+    evidenceJson Bytes?
+    actorId      String
+    createdAt    DateTime            @default(now())
+
+    @@index([orgId, subjectId, purposeKey])
+    @@schema("vault")
+}
+
+model PersonalDataAuditLog {
+    id             String               @id @default(cuid())
+    orgId          String
+    subjectId      String?
+    vaultSubject   PersonalDataSubject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+    action         PersonalDataActionType
+    fieldKey       String?
+    documentId     String?
+    actorType      String
+    actorId        String
+    policyDecision String
+    reasonCode     String?
+    metadataJson   Json?
+    ipHash         String?
+    createdAt      DateTime             @default(now())
+
+    @@index([orgId, subjectId, createdAt])
+    @@index([orgId, actorId, createdAt])
+    @@index([orgId, action, createdAt])
+    @@schema("vault")
+}
+
+model PersonalDataAccessGrant {
+    id             String              @id @default(cuid())
+    orgId          String
+    subjectId      String
+    vaultSubject   PersonalDataSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+    granteeActorId String
+    scopeFieldKeys String[]
+    expiresAt      DateTime
+    reason         String
+    approvedBy     String?
+    revokedAt      DateTime?
+    createdAt      DateTime            @default(now())
+
+    @@index([orgId, granteeActorId, expiresAt])
+    @@schema("vault")
+}
+
+model PersonalDataRetentionJob {
+    id           String                         @id @default(cuid())
+    orgId        String
+    subjectId    String?
+    vaultSubject PersonalDataSubject?           @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+    scheduledFor DateTime
+    status       PersonalDataRetentionJobStatus
+    processedAt  DateTime?
+    errorMessage String?
+    createdAt    DateTime                       @default(now())
+
+    @@index([orgId, status, scheduledFor])
+    @@schema("vault")
+}
