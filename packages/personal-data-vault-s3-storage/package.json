@@ -1,0 +1,17 @@
+{
+  "name": "@qualia/personal-data-vault-s3-storage",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@qualia/personal-data-vault-core": "file:../personal-data-vault-core",
+    "@aws-sdk/client-s3": "^3.1000.0",
+    "@aws-sdk/s3-request-presigner": "^3.1000.0"
+  }
+}

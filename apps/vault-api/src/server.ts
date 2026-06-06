@@ -1,4 +1,8 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+loadEnv({ path: resolve(dirname(fileURLToPath(import.meta.url)), "../../../.env") });
 import { createServer } from "node:http";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
@@ -11,8 +15,11 @@ import {
 } from "@qualia/personal-data-vault-core";
 import { createVaultPrismaRepository } from "@qualia/personal-data-vault-prisma";
 import { createVaultService } from "@qualia/personal-data-vault-next";
-import { createGcsVaultStorageAdapter } from "@qualia/personal-data-vault-google-storage";
-import { Storage } from "@google-cloud/storage";
+import {
+    createS3VaultStorageAdapter,
+    createVaultS3Client,
+} from "@qualia/personal-data-vault-s3-storage";
+import { resolveVaultDatabaseUrl } from "../../../src/env/resolveVaultDatabaseUrl.js";
 import { parseMultipartForm } from "./parseMultipart.js";
 
 const PORT = Number(process.env.PORT ?? 4010);
@@ -55,29 +62,19 @@ function readBody(req: import("node:http").IncomingMessage): Promise<any> {
     });
 }
 
-function getStorage() {
-    let privateKey = process.env.GOOGLE_PRIVATE_KEY ?? "";
-    if (privateKey.includes("\\n")) privateKey = privateKey.replace(/\\n/g, "\n");
-    return new Storage({
-        credentials: {
-            client_email: process.env.GOOGLE_CLIENT_EMAIL,
-            private_key: privateKey,
-        },
-        projectId: process.env.GOOGLE_PROJECT_ID,
-    });
-}
-
 function sanitizeBucketName(name: string): string {
     return name.replace(/^org_/, "").toLowerCase().replace(/[^a-z0-9-_.]/g, "-").slice(0, 63);
 }
 
-const pool = new Pool({ connectionString: process.env.VAULT_DATABASE_URL ?? process.env.POSTGRES_PRISMA_URL });
+const s3Client = createVaultS3Client();
+
+const pool = new Pool({ connectionString: resolveVaultDatabaseUrl() });
 const prisma = new PrismaClient({ adapter: new PrismaPg(pool as any) });
 const vault = createVaultService({
     repository: createVaultPrismaRepository(prisma as never),
     encryption: createAesGcmVaultEncryptionService(createEnvVaultKeyProvider("VAULT_ENCRYPTION_KEY")),
-    storage: createGcsVaultStorageAdapter({
-        getStorage,
+    storage: createS3VaultStorageAdapter({
+        getClient: () => s3Client,
         sanitizeBucketName,
         resolveBucketName: (orgId, orgSlug) => sanitizeBucketName(`${orgId}_${orgSlug}`),
     }),

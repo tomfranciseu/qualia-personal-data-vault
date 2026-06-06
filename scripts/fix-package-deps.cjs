@@ -6,7 +6,7 @@ const WORKSPACE_DEPS = {
     "@qualia/personal-data-vault-core": "file:../personal-data-vault-core",
     "@qualia/personal-data-vault-prisma": "file:../personal-data-vault-prisma",
     "@qualia/personal-data-vault-next": "file:../personal-data-vault-next",
-    "@qualia/personal-data-vault-google-storage": "file:../personal-data-vault-google-storage",
+    "@qualia/personal-data-vault-s3-storage": "file:../personal-data-vault-s3-storage",
 };
 
 for (const dir of [
@@ -15,7 +15,7 @@ for (const dir of [
     "packages/personal-data-vault-next",
     "packages/personal-data-vault-client",
     "packages/personal-data-vault-react",
-    "packages/personal-data-vault-google-storage",
+    "packages/personal-data-vault-s3-storage",
     "apps/vault-api",
 ]) {
     const pkgPath = path.join(root, dir, "package.json");

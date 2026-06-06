@@ -8,4 +8,4 @@ COPY apps/vault-api ./apps/vault-api
 RUN npm install
 RUN npx prisma generate
 EXPOSE 4010
-CMD ["npm", "run", "dev", "-w", "@qualia/vault-api"]
+CMD ["npm", "run", "start", "-w", "@qualia/vault-api"]

@@ -1,0 +1,36 @@
+services:
+  postgresql_vault:
+    image: postgres:17
+    container_name: pg_vault_prod
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${VAULT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${VAULT_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${VAULT_POSTGRES_DB:-vault}
+    volumes:
+      - postgresql_data_vault:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${VAULT_POSTGRES_USER} -d ${VAULT_POSTGRES_DB:-vault}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  vault_api:
+    build:
+      context: .
+      dockerfile: apps/vault-api/Dockerfile
+    container_name: vault_api_prod
+    restart: unless-stopped
+    depends_on:
+      postgresql_vault:
+        condition: service_healthy
+    env_file:
+      - /etc/vault-api.env
+    environment:
+      VAULT_POSTGRES_HOST: postgresql_vault
+      VAULT_POSTGRES_PORT: "5432"
+    ports:
+      - "127.0.0.1:4010:4010"
+
+volumes:
+  postgresql_data_vault:

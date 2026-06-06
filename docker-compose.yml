@@ -1,0 +1,34 @@
+services:
+  postgresql_vault:
+    image: postgres:17
+    container_name: pg_vault_dev
+    environment:
+      POSTGRES_USER: ${VAULT_POSTGRES_USER:-vault}
+      POSTGRES_PASSWORD: ${VAULT_POSTGRES_PASSWORD:-vault}
+      POSTGRES_DB: vault
+    ports:
+      - "${VAULT_POSTGRES_PORT:-5434}:5432"
+    volumes:
+      - postgresql_data_vault:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d vault"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio_vault_dev
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${VAULT_STORAGE_ACCESS_KEY:-minio}
+      MINIO_ROOT_PASSWORD: ${VAULT_STORAGE_SECRET_KEY:-minio123}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data_vault:/data
+
+volumes:
+  postgresql_data_vault:
+  minio_data_vault:

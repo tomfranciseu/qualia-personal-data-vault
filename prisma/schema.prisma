@@ -109,7 +109,7 @@ model PersonalDataDocument {
     subjectId         String
     vaultSubject      PersonalDataSubject      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
     fieldKey          String
-    storageBackend    String                   @default("gcs")
+    storageBackend    String                   @default("s3")
     storageObjectKey  String
     encryptedMetadata Bytes
     keyVersion        Int
