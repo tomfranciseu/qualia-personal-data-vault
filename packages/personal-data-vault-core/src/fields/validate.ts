@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { PersonalDataFieldDefinition } from "../types.js";
+import type { PersonalDataFieldDefinition } from "../types";
 
 const fieldDefinitionSchema = z.object({
     key: z

@@ -3,7 +3,7 @@ import type {
     PersonalDataPolicy,
     PersonalDataPolicyInput,
     PolicyDecision,
-} from "../types.js";
+} from "../types";
 
 const FINANCE_DENIED_SENSITIVITIES = new Set(["sensitive", "special_category"]);
 const FINANCE_DENIED_TYPES = new Set(["file"]);

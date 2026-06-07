@@ -1,4 +1,4 @@
-import type { PersonalDataFieldDefinition, RetentionRule } from "../types.js";
+import type { PersonalDataFieldDefinition, RetentionRule } from "../types";
 
 export type RetentionContext = {
     tripEndDate?: Date | null;

@@ -1,5 +1,5 @@
-import { defineField, defineFieldCatalog } from "../fields/validate.js";
-import type { PersonalDataFieldDefinition } from "../types.js";
+import { defineField, defineFieldCatalog } from "../fields/validate";
+import type { PersonalDataFieldDefinition } from "../types";
 
 const dietaryRestrictions = defineField({
     key: "dietary_restrictions",

@@ -6,7 +6,7 @@ import type {
     EncryptedValue,
     PersonalDataEncryptionService,
     RotateValueKeyInput,
-} from "../types.js";
+} from "../types";
 
 export type VaultKeyProvider = {
     getKey(version: number): Buffer;
