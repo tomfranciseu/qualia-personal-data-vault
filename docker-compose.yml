@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${VAULT_POSTGRES_PASSWORD:-vault}
       POSTGRES_DB: vault
     ports:
-      - "${VAULT_POSTGRES_PORT:-5434}:5432"
+      - "${VAULT_POSTGRES_PORT:-5435}:5432"
     volumes:
       - postgresql_data_vault:/var/lib/postgresql/data
     healthcheck:

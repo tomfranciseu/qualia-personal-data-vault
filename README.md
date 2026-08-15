@@ -23,7 +23,7 @@ npm run migrate:deploy
 npm run dev:vault-api
 ```
 
-Postgres runs in Docker on port **5434**. MinIO (local S3) runs on **9000** (console **9001**). Default MinIO credentials match `.env.example`.
+Postgres runs in Docker on port **5435**. MinIO (local S3) runs on **9000** (console **9001**). Default MinIO credentials match `.env.example`.
 
 Health: `GET http://localhost:4010/health`
 

@@ -23,11 +23,11 @@ describe("resolveVaultDatabaseUrl", () => {
                 VAULT_POSTGRES_USER: "vault",
                 VAULT_POSTGRES_PASSWORD: '7rre!`<r>%Cy`O0<QBEl',
                 VAULT_POSTGRES_HOST: "localhost",
-                VAULT_POSTGRES_PORT: "5434",
+                VAULT_POSTGRES_PORT: "5435",
                 VAULT_POSTGRES_DB: "vault",
                 VAULT_POSTGRES_SCHEMA: "vault",
             }),
-        ).toBe("postgresql://vault:7rre!%60%3Cr%3E%25Cy%60O0%3CQBEl@localhost:5434/vault?schema=vault");
+        ).toBe("postgresql://vault:7rre!%60%3Cr%3E%25Cy%60O0%3CQBEl@localhost:5435/vault?schema=vault");
     });
 
     it("supports monday dev DB layout", () => {
@@ -45,7 +45,7 @@ describe("resolveVaultDatabaseUrl", () => {
 
     it("uses defaults when no env is set", () => {
         expect(resolveVaultDatabaseUrl({})).toBe(
-            "postgresql://vault:vault@localhost:5434/vault?schema=vault",
+            "postgresql://vault:vault@localhost:5435/vault?schema=vault",
         );
     });
 });

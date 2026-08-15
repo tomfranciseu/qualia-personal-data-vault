@@ -24,7 +24,7 @@ export function resolveVaultDatabaseUrl(env: VaultDatabaseUrlEnv = process.env):
     const user = trimOrUndefined(env.VAULT_POSTGRES_USER) ?? "vault";
     const password = trimOrUndefined(env.VAULT_POSTGRES_PASSWORD) ?? "vault";
     const host = trimOrUndefined(env.VAULT_POSTGRES_HOST) ?? "localhost";
-    const port = trimOrUndefined(env.VAULT_POSTGRES_PORT) ?? "5434";
+    const port = trimOrUndefined(env.VAULT_POSTGRES_PORT) ?? "5435";
     const database = trimOrUndefined(env.VAULT_POSTGRES_DB) ?? "vault";
     const schema = trimOrUndefined(env.VAULT_POSTGRES_SCHEMA) ?? "vault";
 
