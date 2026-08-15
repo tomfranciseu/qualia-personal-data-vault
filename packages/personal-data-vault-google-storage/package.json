@@ -7,7 +7,9 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@qualia/personal-data-vault-core": "file:../personal-data-vault-core",
-    "@google-cloud/storage": "^7.19.0"
+    "@qualia/personal-data-vault-core": "file:../personal-data-vault-core"
+  },
+  "peerDependencies": {
+    "@google-cloud/storage": "^7.19.0 || ^8.0.0"
   }
 }

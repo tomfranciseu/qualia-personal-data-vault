@@ -1,5 +1,4 @@
 import { createHash } from "node:crypto";
-import type { Storage } from "@google-cloud/storage";
 import type {
     VaultDeleteObjectInput,
     VaultPutObjectInput,
@@ -8,8 +7,26 @@ import type {
     VaultStoredObjectRef,
 } from "@qualia/personal-data-vault-core";
 
+/**
+ * Structural GCS client surface used by the vault adapter.
+ * Avoid importing `@google-cloud/storage` types here so app (v8) and nested (v7)
+ * package copies do not collide on private class identity.
+ * Method syntax keeps parameter checking bivariant so real Storage clients assign.
+ */
+export type GcsVaultStorageClient = {
+    bucket(name: string): {
+        exists(): Promise<[boolean, ...unknown[]]>;
+        create(): Promise<unknown>;
+        file(path: string): {
+            save(data: Buffer, options?: object): Promise<unknown>;
+            delete(options?: object): Promise<unknown>;
+            getSignedUrl(config: object): Promise<[string, ...unknown[]]>;
+        };
+    };
+};
+
 export type GcsVaultStorageConfig = {
-    getStorage: () => Storage;
+    getStorage: () => GcsVaultStorageClient;
     sanitizeBucketName: (name: string) => string;
     resolveBucketName: (orgId: string, orgSlug: string) => string;
     folderPrefix?: string;
