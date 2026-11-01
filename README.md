@@ -86,3 +86,22 @@ VAULT_SERVICE_TOKEN=<same-shared-secret>
 | `npm run generate` | Prisma client generate |
 | `npm run migrate:deploy` | Apply vault schema migrations |
 | `npm run dev:vault-api` | Start HTTP API on port 4010 |
+
+## Development runtime and dependency compatibility
+
+Use Node.js 24 (CI), or Node.js >=22.12.0. Tests use Vitest 5 with an explicit
+Vite 8 development dependency. Run `npm run generate`, `npm test`, and
+`npm run check:types` after installing dependencies.
+
+`@qualia/personal-data-vault-google-storage` accepts `@google-cloud/storage`
+`^7.19.0 || ^8.0.0` as a peer: the consuming application supplies its Storage
+client rather than installing a second private copy. Vault development tests
+use Storage 8.4 and check real SDK type compatibility and adapter call options
+with network methods mocked; they do not access a bucket or require credentials.
+Storage 8 consumers need Node >=22. The S3-backed vault-api does not require a
+GCS runtime client.
+
+To make these upgrades available to monday2.0, publish a new Git tag after
+reviewing and committing the change, then update its pinned vault checkout,
+vendor manifest snapshots, lockfile and contract tests together. Do not edit
+monday2.0's vendored v0.1.2 manifests in isolation.

@@ -12,8 +12,8 @@
     "@qualia/personal-data-vault-prisma": "file:../../packages/personal-data-vault-prisma",
     "@qualia/personal-data-vault-next": "file:../../packages/personal-data-vault-next",
     "@qualia/personal-data-vault-s3-storage": "file:../../packages/personal-data-vault-s3-storage",
-    "@prisma/client": "^7.8.0",
-    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.10.1",
+    "@prisma/adapter-pg": "^7.10.1",
     "dotenv": "^17.4.2",
     "pg": "^8.20.0"
   }
