@@ -23,13 +23,13 @@
     "postinstall": "prisma generate"
   },
   "devDependencies": {
-    "@types/node": "^25.6.2",
+    "@types/node": "^25.9.9",
     "@types/react": "^19.2.17",
     "prisma": "^7.10.1",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
-    "vitest": "^5.0.5",
-    "vite": "^8.3.5",
+    "vitest": "^5.1.0",
+    "vite": "^8.3.8",
     "@google-cloud/storage": "^8.4.0"
   },
   "dependencies": {
