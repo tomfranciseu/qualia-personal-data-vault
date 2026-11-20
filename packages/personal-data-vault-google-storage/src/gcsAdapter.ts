@@ -9,7 +9,7 @@ import type {
 
 /**
  * Structural GCS client surface used by the vault adapter.
- * Avoid importing `@google-cloud/storage` types here so app (v8) and nested (v7)
+ * Avoid importing `@google-cloud/storage` types here so app (v9) and older (v7/v8)
  * package copies do not collide on private class identity.
  * Method syntax keeps parameter checking bivariant so real Storage clients assign.
  */

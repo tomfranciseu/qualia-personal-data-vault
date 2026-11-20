@@ -90,18 +90,19 @@ VAULT_SERVICE_TOKEN=<same-shared-secret>
 ## Development runtime and dependency compatibility
 
 Use Node.js 24 (CI), or Node.js >=22.12.0. Tests use Vitest 5 with an explicit
-Vite 8 development dependency. Run `npm run generate`, `npm test`, and
+Vite 8 development dependency and TypeScript 7. Run `npm run generate`, `npm test`, and
 `npm run check:types` after installing dependencies.
 
 `@qualia/personal-data-vault-google-storage` accepts `@google-cloud/storage`
-`^7.19.0 || ^8.0.0` as a peer: the consuming application supplies its Storage
+`^7.19.0 || ^8.0.0 || ^9.0.0` as a peer: the consuming application supplies its Storage
 client rather than installing a second private copy. Vault development tests
-use Storage 8.4 and check real SDK type compatibility and adapter call options
+use Storage 9.0 and check real SDK type compatibility and adapter call options
 with network methods mocked; they do not access a bucket or require credentials.
-Storage 8 consumers need Node >=22. The S3-backed vault-api does not require a
-GCS runtime client.
+Storage 8/9 consumers need Node >=22. The S3-backed vault-api does not require a
+GCS runtime client. Root tooling and vault-api use dotenv 18; existing shell
+variables retain precedence over values loaded from the `.env` file.
 
 To make these upgrades available to monday2.0, publish a new Git tag after
 reviewing and committing the change, then update its pinned vault checkout,
 vendor manifest snapshots, lockfile and contract tests together. Do not edit
-monday2.0's vendored v0.1.2 manifests in isolation.
+monday2.0's pinned vendor manifests in isolation.

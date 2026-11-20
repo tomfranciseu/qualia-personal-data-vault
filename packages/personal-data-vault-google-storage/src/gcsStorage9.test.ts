@@ -4,7 +4,7 @@ import { createGcsVaultStorageAdapter, type GcsVaultStorageClient } from "./gcsA
 
 afterEach(() => vi.restoreAllMocks());
 
-describe("Google Cloud Storage 8 compatibility", () => {
+describe("Google Cloud Storage 9 compatibility", () => {
     it("accepts a real Storage client and preserves upload, delete and signed URL options", async () => {
         const storage = new Storage({ projectId: "vault-test" });
         expectTypeOf(storage).toExtend<GcsVaultStorageClient>();

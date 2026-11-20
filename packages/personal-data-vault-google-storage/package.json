@@ -10,6 +10,6 @@
     "@qualia/personal-data-vault-core": "file:../personal-data-vault-core"
   },
   "peerDependencies": {
-    "@google-cloud/storage": "^7.19.0 || ^8.0.0"
+    "@google-cloud/storage": "^7.19.0 || ^8.0.0 || ^9.0.0"
   }
 }
